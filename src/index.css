@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Custom subtle scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(107, 33, 168, 0.25);
+  border-radius: 9999px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.35);
+}
+
+/* ==========================================================================
+   تنسيقات الطباعة المخصصة (@media print) لبطاقات المؤشرات (KPIs) والجداول الهندسية
+   ========================================================================== */
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 8mm;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    direction: rtl !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    font-size: 11px !important;
+  }
+
+  /* إخفاء القائمة الجانبية، الأزرار التفاعلية، الفلاتر، وشريط البحث عند الطباعة */
+  .no-print,
+  aside,
+  nav {
+    display: none !important;
+  }
+
+  /* إظهار الترويسة الرسمية المخصصة للطباعة فقط */
+  .print-only-header {
+    display: flex !important;
+  }
+
+  /* توسيع حاوية المحتوى لتشمل كامل عرض الورقة */
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .print-workspace-container {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  /* تحسين وضوح بطاقات المؤشرات (KPIs) وبطاقات الجداول والمخططات */
+  .print-card {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  /* ضمان ظهور الجداول المفتوحة بالكامل دون أشرطة تمرير مع حدود واضحة */
+  .overflow-x-auto {
+    overflow: visible !important;
+  }
+
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    color: #0f172a !important;
+  }
+
+  th,
+  td {
+    border-bottom: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+  }
+
+  thead tr {
+    background-color: #f3e8ff !important;
+    color: #1e1b4b !important;
+  }
+}

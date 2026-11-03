@@ -21,9 +21,11 @@ import {
   FileDown,
   Loader2,
   Printer,
+  RotateCcw,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { store, useAppDispatch, useAppSelector } from './store';
-import { setActiveTab, setFilter } from './store/slices/dashboardSlice';
+import { setActiveTab, setFilter, resetFilters } from './store/slices/dashboardSlice';
 import { HeaderBanner } from './components/HeaderBanner';
 import { SidebarNav, NAV_ITEMS } from './components/SidebarNav';
 import { DashboardCharts } from './components/DashboardCharts';
@@ -52,6 +54,22 @@ const DashboardWorkspace: React.FC = () => {
       : filters.year === '2025'
       ? 0.65
       : 1;
+
+  // التحقق من تفعيل فلاتر مخصصة بخلاف القيم الافتراضية
+  const isCustomFilterActive =
+    filters.year !== '2026' ||
+    filters.project !== 'جميع المشروعات' ||
+    filters.owner !== 'الكل' ||
+    filters.discipline !== 'الكل' ||
+    filters.status !== 'الكل';
+
+  const activeFiltersCount = [
+    filters.year !== '2026',
+    filters.project !== 'جميع المشروعات',
+    filters.owner !== 'الكل',
+    filters.discipline !== 'الكل',
+    filters.status !== 'الكل',
+  ].filter(Boolean).length;
 
   const handleExportDashboardPdf = async () => {
     if (!workspaceCaptureRef.current || isExportingPdf) return;
@@ -310,6 +328,30 @@ const DashboardWorkspace: React.FC = () => {
                     <option value="متأخر">متأخر</option>
                   </select>
                   <ChevronDown className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-purple-700 dark:text-purple-400" />
+                </div>
+
+                {/* شارة حالة حفظ الفلاتر في LocalStorage وزر إعادة الضبط السريع */}
+                <div className="flex items-center gap-1.5 mr-1">
+                  {isCustomFilterActive && (
+                    <button
+                      type="button"
+                      onClick={() => dispatch(resetFilters())}
+                      title="إعادة ضبط كافة الفلاتر للقيم الافتراضية وحفظها في التخزين المحلي"
+                      className="flex items-center gap-1 rounded-full border border-purple-300 dark:border-purple-700 bg-purple-100/90 dark:bg-purple-950/80 hover:bg-purple-200 dark:hover:bg-purple-900 px-2.5 py-1 text-[11px] font-bold text-purple-900 dark:text-purple-200 shadow-xs transition cursor-pointer whitespace-nowrap"
+                    >
+                      <RotateCcw className="h-3 w-3 shrink-0" />
+                      <span>إعادة ضبط ({activeFiltersCount})</span>
+                    </button>
+                  )}
+
+                  <div
+                    title="تفضيلات الفلاتر الحالية (السنة، المشروع، المالك، التخصص، الحالة) يتم حفظها تلقائياً في التخزين المحلي (LocalStorage) وتستعاد عند تحديث الصفحة"
+                    className="flex items-center gap-1 text-[10px] sm:text-[11px] font-bold text-purple-700 dark:text-purple-300 bg-purple-50/80 dark:bg-purple-950/50 border border-purple-200/80 dark:border-purple-800/80 rounded-full px-2.5 py-1 whitespace-nowrap select-none"
+                  >
+                    <SlidersHorizontal className="h-3 w-3 text-purple-600 dark:text-purple-400 shrink-0" />
+                    <span className="hidden sm:inline">حفظ تلقائي للفلاتر</span>
+                    <span className="sm:hidden">محفوظة</span>
+                  </div>
                 </div>
               </div>
 

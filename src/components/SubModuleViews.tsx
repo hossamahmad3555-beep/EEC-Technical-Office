@@ -21,6 +21,7 @@ import {
   FileCheck2,
   CheckSquare,
   Square,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../store';
 import {
@@ -28,6 +29,7 @@ import {
   setActiveModal,
   setActiveTab,
   setFilter,
+  resetFilters,
   toggleDarkMode,
   toggleDrawingForTransmittal,
   updateApprovalStatus,
@@ -39,6 +41,7 @@ import {
 } from '../utils/exportService';
 import { EngineeringAuditLog } from './EngineeringAuditLog';
 import { TransmittalGenerator } from './TransmittalGenerator';
+import { CostComparisonChart } from './CostComparisonChart';
 
 export const SubModuleViews: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -414,101 +417,107 @@ export const SubModuleViews: React.FC = () => {
       )}
 
       {(activeTab === 'boq' || activeTab === 'tenders') && (
-        <div className="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-white/95 dark:bg-slate-900/95 p-4 shadow-sm overflow-x-auto">
-          <table className="w-full text-right text-xs">
-            <thead>
-              <tr className="bg-purple-100/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
-                <th className="py-2.5 px-3 rounded-r-xl">كود المقايسة</th>
-                <th className="py-2.5 px-3">بيان المقايسة وحصر الكميات</th>
-                <th className="py-2.5 px-3">المشروع</th>
-                <th className="py-2.5 px-3">عدد البنود</th>
-                <th className="py-2.5 px-3">القيمة التقديرية (مليون ج.م)</th>
-                <th className="py-2.5 px-3 rounded-l-xl">الحالة</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-bold">
-              {estimatesList
-                .filter(
-                  (est) =>
-                    !searchLower ||
-                    est.code.toLowerCase().includes(searchLower) ||
-                    est.title.toLowerCase().includes(searchLower) ||
-                    est.project.toLowerCase().includes(searchLower)
-                )
-                .map((est) => (
-                  <tr
-                    key={est.id}
-                    className="hover:bg-purple-50/50 dark:hover:bg-slate-800/60"
-                  >
-                    <td className="py-3 px-3 font-mono text-purple-800 dark:text-purple-300">
-                      {est.code}
-                    </td>
-                    <td className="py-3 px-3 text-slate-900 dark:text-white">
-                      {est.title}
-                    </td>
-                    <td className="py-3 px-3 text-slate-700 dark:text-slate-300">
-                      {est.project}
-                    </td>
-                    <td className="py-3 px-3 font-mono tabular-nums">
-                      {est.itemsCount} بند
-                    </td>
-                    <td className="py-3 px-3 font-mono text-emerald-700 dark:text-emerald-400 tabular-nums">
-                      {est.estimatedMillion.toFixed(1)}
-                    </td>
-                    <td className="py-3 px-3 text-emerald-700 dark:text-emerald-400">
-                      {est.status}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        <div className="space-y-4">
+          <CostComparisonChart />
+          <div className="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-white/95 dark:bg-slate-900/95 p-4 shadow-sm overflow-x-auto">
+            <table className="w-full text-right text-xs">
+              <thead>
+                <tr className="bg-purple-100/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                  <th className="py-2.5 px-3 rounded-r-xl">كود المقايسة</th>
+                  <th className="py-2.5 px-3">بيان المقايسة وحصر الكميات</th>
+                  <th className="py-2.5 px-3">المشروع</th>
+                  <th className="py-2.5 px-3">عدد البنود</th>
+                  <th className="py-2.5 px-3">القيمة التقديرية (مليون ج.م)</th>
+                  <th className="py-2.5 px-3 rounded-l-xl">الحالة</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-bold">
+                {estimatesList
+                  .filter(
+                    (est) =>
+                      !searchLower ||
+                      est.code.toLowerCase().includes(searchLower) ||
+                      est.title.toLowerCase().includes(searchLower) ||
+                      est.project.toLowerCase().includes(searchLower)
+                  )
+                  .map((est) => (
+                    <tr
+                      key={est.id}
+                      className="hover:bg-purple-50/50 dark:hover:bg-slate-800/60"
+                    >
+                      <td className="py-3 px-3 font-mono text-purple-800 dark:text-purple-300">
+                        {est.code}
+                      </td>
+                      <td className="py-3 px-3 text-slate-900 dark:text-white">
+                        {est.title}
+                      </td>
+                      <td className="py-3 px-3 text-slate-700 dark:text-slate-300">
+                        {est.project}
+                      </td>
+                      <td className="py-3 px-3 font-mono tabular-nums">
+                        {est.itemsCount} بند
+                      </td>
+                      <td className="py-3 px-3 font-mono text-emerald-700 dark:text-emerald-400 tabular-nums">
+                        {est.estimatedMillion.toFixed(1)}
+                      </td>
+                      <td className="py-3 px-3 text-emerald-700 dark:text-emerald-400">
+                        {est.status}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {activeTab === 'invoices' && (
-        <div className="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-white/95 dark:bg-slate-900/95 p-4 shadow-sm overflow-x-auto">
-          <table className="w-full text-right text-xs">
-            <thead>
-              <tr className="bg-purple-100/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
-                <th className="py-2.5 px-3 rounded-r-xl">بيان المستخلص</th>
-                <th className="py-2.5 px-3">المشروع</th>
-                <th className="py-2.5 px-3">القيمة (مليون ج.م)</th>
-                <th className="py-2.5 px-3">تاريخ التقديم</th>
-                <th className="py-2.5 px-3 rounded-l-xl">الحالة</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-bold">
-              {invoicesList
-                .filter(
-                  (inv) =>
-                    !searchLower ||
-                    inv.invoiceNumber.toLowerCase().includes(searchLower) ||
-                    inv.project.toLowerCase().includes(searchLower)
-                )
-                .map((inv) => (
-                  <tr
-                    key={inv.id}
-                    className="hover:bg-purple-50/50 dark:hover:bg-slate-800/60"
-                  >
-                    <td className="py-3 px-3 text-slate-900 dark:text-white">
-                      {inv.invoiceNumber}
-                    </td>
-                    <td className="py-3 px-3 text-slate-700 dark:text-slate-300">
-                      {inv.project}
-                    </td>
-                    <td className="py-3 px-3 font-mono text-emerald-700 dark:text-emerald-400 tabular-nums">
-                      {inv.amountMillion.toFixed(1)}
-                    </td>
-                    <td className="py-3 px-3 font-mono text-slate-600 dark:text-slate-400 tabular-nums">
-                      {inv.submissionDate}
-                    </td>
-                    <td className="py-3 px-3 text-emerald-700 dark:text-emerald-400">
-                      {inv.status}
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
+        <div className="space-y-4">
+          <CostComparisonChart />
+          <div className="rounded-2xl border border-purple-200 dark:border-purple-900/60 bg-white/95 dark:bg-slate-900/95 p-4 shadow-sm overflow-x-auto">
+            <table className="w-full text-right text-xs">
+              <thead>
+                <tr className="bg-purple-100/70 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                  <th className="py-2.5 px-3 rounded-r-xl">بيان المستخلص</th>
+                  <th className="py-2.5 px-3">المشروع</th>
+                  <th className="py-2.5 px-3">القيمة (مليون ج.م)</th>
+                  <th className="py-2.5 px-3">تاريخ التقديم</th>
+                  <th className="py-2.5 px-3 rounded-l-xl">الحالة</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-800 font-bold">
+                {invoicesList
+                  .filter(
+                    (inv) =>
+                      !searchLower ||
+                      inv.invoiceNumber.toLowerCase().includes(searchLower) ||
+                      inv.project.toLowerCase().includes(searchLower)
+                  )
+                  .map((inv) => (
+                    <tr
+                      key={inv.id}
+                      className="hover:bg-purple-50/50 dark:hover:bg-slate-800/60"
+                    >
+                      <td className="py-3 px-3 text-slate-900 dark:text-white">
+                        {inv.invoiceNumber}
+                      </td>
+                      <td className="py-3 px-3 text-slate-700 dark:text-slate-300">
+                        {inv.project}
+                      </td>
+                      <td className="py-3 px-3 font-mono text-emerald-700 dark:text-emerald-400 tabular-nums">
+                        {inv.amountMillion.toFixed(1)}
+                      </td>
+                      <td className="py-3 px-3 font-mono text-slate-600 dark:text-slate-400 tabular-nums">
+                        {inv.submissionDate}
+                      </td>
+                      <td className="py-3 px-3 text-emerald-700 dark:text-emerald-400">
+                        {inv.status}
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
@@ -655,6 +664,53 @@ export const SubModuleViews: React.FC = () => {
               {darkMode ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
               <span>{darkMode ? 'التبديل للوضع الفاتح' : 'التبديل للوضع الداكن'}</span>
             </button>
+          </div>
+
+          {/* قسم إدارة حالة تفضيلات الفلاتر المحفوظة في LocalStorage */}
+          <div className="flex flex-col gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <p className="text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
+                  <SlidersHorizontal className="h-4 w-4 text-purple-700 dark:text-purple-400" />
+                  <span>تفضيلات فلاتر المشروعات والبحث المحفوظة (LocalStorage)</span>
+                </p>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                  يتم الاحتفاظ بحالة الفلاتر تلقائياً في المتصفح وتستعاد عند كل إعادة تحميل للصفحة
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => dispatch(resetFilters())}
+                className="flex items-center gap-1.5 rounded-xl border border-purple-300 dark:border-purple-700 bg-purple-50 dark:bg-purple-950/70 hover:bg-purple-100 dark:hover:bg-purple-900 px-3 py-1.5 text-xs font-bold text-purple-800 dark:text-purple-300 transition cursor-pointer"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                <span>إعادة ضبط الفلاتر للافتراضي</span>
+              </button>
+            </div>
+
+            {/* تفاصيل القيم المحفوظة حالياً */}
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1 text-xs">
+              <div className="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">السنة:</span>
+                <span className="font-mono font-bold text-purple-800 dark:text-purple-300">{filters.year}</span>
+              </div>
+              <div className="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">المشروع:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">{filters.project}</span>
+              </div>
+              <div className="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">المالك:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">{filters.owner}</span>
+              </div>
+              <div className="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">التخصص:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">{filters.discipline}</span>
+              </div>
+              <div className="rounded-xl bg-slate-50 dark:bg-slate-800/80 p-2 border border-slate-200/60 dark:border-slate-700">
+                <span className="text-[10px] text-slate-500 dark:text-slate-400 block">حالة المشروع:</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 truncate block">{filters.status}</span>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-4">
